@@ -1,0 +1,21 @@
+{
+    "name": "1phper/tt-miniprogram",
+    "description": "字节跳动小程序SDK",
+    "type": "ucloudant-toutiao-miniprogram",
+    "license": "",
+    "authors": [
+        {
+            "name": "jiangqiao",
+            "email": "1062241667@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "TtMiniProgram\\": "tt-miniprogram/src"
+        }
+    }
+}
