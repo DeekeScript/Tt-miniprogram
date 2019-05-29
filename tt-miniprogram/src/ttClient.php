@@ -16,11 +16,9 @@ class ttClient
 {
     public $app_id;
     public $secret;
-    public $uid;
 
-    public function __construct($app_id, $uid, $secret)
+    public function __construct($app_id, $secret)
     {
-        $this->uid = $uid;
         $this->app_id = $app_id;
         $this->secret = $secret;
     }
