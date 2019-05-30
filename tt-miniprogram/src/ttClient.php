@@ -14,12 +14,12 @@ use GuzzleHttp\Psr7\Request;
 
 class ttClient
 {
-    public $app_id;
+    public $appid;
     public $secret;
 
-    public function __construct($app_id, $secret)
+    public function __construct($appid, $secret)
     {
-        $this->app_id = $app_id;
+        $this->appid = $appid;
         $this->secret = $secret;
     }
 
@@ -28,7 +28,7 @@ class ttClient
         $grant_type = 'client_credential';
         $url = 'https://developer.toutiao.com/api/apps/token';
         $data = [
-            'app_id' => $this->app_id,
+            'appid' => $this->appid,
             'secret' => $this->secret,
             'grant_type' => $grant_type
         ];
@@ -46,7 +46,7 @@ class ttClient
     {
         $url = 'https://developer.toutiao.com/api/apps/jscode2session';
         $data = [
-            'app_id' => $this->app_id,
+            'appid' => $this->appid,
             'secret' => $this->secret,
             'code' => $code,
         ];
