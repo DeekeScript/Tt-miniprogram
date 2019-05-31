@@ -33,10 +33,11 @@ class ttClient
             'grant_type' => $grant_type
         ];
         $client = new Client();
-        $request = new Request('GET', $url . '?' . http_build_query($data), [], []);
+        $request = new Request('GET', $url . '?' . http_build_query($data), [], '');
         try {
             $result = $client->send($request, ['verify' => false]);
-            return $result->getBody()->getContents();
+            $data = json_decode($result->getBody()->getContents(), true);
+            return $data;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -63,15 +64,23 @@ class ttClient
         }
     }
 
-    public function checkSignature($rawData, $session_key, $signature)
+    private function checkSignature($rawData, $session_key, $signature)
     {
         return sha1($rawData . $session_key) === $signature;
     }
 
-    public function getUserInfo($encryptedData, $session_key, $iv)
+    public function getUserInfo($encryptedData, $session_key, $iv, $rawData, $signature)
     {
         $key = base64_decode($session_key);
         $iv = base64_decode($iv);
-        return openssl_decrypt(base64_decode($encryptedData), 'aes-128-cbc', $key, true, $iv);
+        $plaintext = openssl_decrypt(base64_decode($encryptedData), 'AES-128-CBC', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv);
+        // trim pkcs#7 padding
+        $pad = ord(substr($plaintext, -1));
+        $pad = $pad < 1 || $pad > 32 ? 0 : $pad;
+        $plaintext = substr($plaintext, 0, strlen($plaintext) - $pad);
+        if ($this->checkSignature($rawData, $session_key, $signature)) {
+            return $plaintext;
+        }
+        return false;
     }
 }
